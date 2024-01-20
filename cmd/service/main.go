@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/ellipticum/streamline/core/router/mux"
+	"github.com/ellipticum/streamline/core/router"
 	"github.com/ellipticum/streamline/internal/routes"
 	"github.com/ellipticum/streamline/pkg/utils"
 	"net/http"
@@ -20,15 +20,10 @@ func main() {
 
 	port := os.Getenv("PORT")
 
-	mux := mux.Create()
-
-	routes.Register(mux)
-
 	address := ":" + port
 
-	fmt.Println(address)
+	routes.Register()
 
-	http.ListenAndServe(address, mux)
-
-	fmt.Printf("The server has been started. Port: %s\n", port)
+	http.HandleFunc("/", router.Listen)
+	http.ListenAndServe(address, nil)
 }

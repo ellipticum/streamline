@@ -4,15 +4,31 @@ import (
 	"fmt"
 	"github.com/ellipticum/streamline/core/router/mux"
 	"github.com/ellipticum/streamline/internal/routes"
+	"github.com/ellipticum/streamline/pkg/utils"
 	"net/http"
+	"os"
 )
 
 func main() {
+	err := utils.LoadEnvFromFile("../../env.development")
+
+	if err != nil {
+		fmt.Printf("Error loading .env: %s\n", err)
+
+		return
+	}
+
+	port := os.Getenv("PORT")
+
 	mux := mux.Create()
 
 	routes.Register(mux)
 
-	http.ListenAndServe(":8080", mux)
+	address := ":" + port
 
-	fmt.Println("The server has been started")
+	fmt.Println(address)
+
+	http.ListenAndServe(address, mux)
+
+	fmt.Printf("The server has been started. Port: %s\n", port)
 }

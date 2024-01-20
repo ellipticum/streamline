@@ -7,7 +7,7 @@ import (
 )
 
 func Register(mux *mux.Structure) {
-	mux.Add("test", func(writer http.ResponseWriter, request *http.Request) {
+	mux.Add("/api/v1/test", func(writer http.ResponseWriter, request *http.Request) {
 		fmt.Fprintln(writer, "Hello, World!")
 	})
 }

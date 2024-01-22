@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/ellipticum/streamline/internal/dto"
 	"github.com/ellipticum/streamline/internal/services"
+	"github.com/ellipticum/streamline/pkg/utils"
 	"net/http"
 )
 
@@ -16,6 +17,27 @@ func (user *User) Get(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	json.NewEncoder(w).Encode(result)
+}
+
+func (user *User) GetByID(w http.ResponseWriter, r *http.Request) {
+	ID := utils.Extract(r)
+
+	if ID == "" {
+		http.Error(w, "No ID provided", http.StatusBadRequest)
+		return
+	}
+
+	result, err := service.GetByID(ID)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+
 		return
 	}
 

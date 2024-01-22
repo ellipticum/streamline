@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/ellipticum/streamline/internal/dto"
 	"github.com/ellipticum/streamline/internal/services"
 	"net/http"
@@ -13,7 +12,16 @@ var service = services.User{}
 type User struct{}
 
 func (user *User) Get(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "User | Get")
+	result, err := service.Get()
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	json.NewEncoder(w).Encode(result)
 }
 
 func (user *User) Create(w http.ResponseWriter, r *http.Request) {
@@ -31,7 +39,12 @@ func (user *User) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result := service.Create(data)
+	result, err := service.Create(data)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 

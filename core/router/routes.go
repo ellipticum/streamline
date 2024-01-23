@@ -1,6 +1,6 @@
 package router
 
-var Routes []Route
+var Routes []*Route
 
 var (
 	Get    = Create("GET")
